@@ -12,25 +12,27 @@ def create_dist_directory():
 
 def get_connected_devices():
     try:
-        result = subprocess.check_output(['arp', '-a'], stderr=subprocess.STDOUT, text=True)
+        # Use 'ip neigh' on Linux to get connected devices
+        result = subprocess.check_output(['ip', 'neigh'], stderr=subprocess.STDOUT, text=True)
         return result.splitlines()
     except subprocess.CalledProcessError as e:
         print(f"Error retrieving connected devices: {e.output}")
         return []
 
 def extract_device_info(line):
+    # Split the line into parts to extract the device info (IP, MAC)
     parts = line.split()
     if len(parts) > 1:
-        ip_address = parts[1].strip('()')
-        device_name = parts[0]
-        return device_name, ip_address
+        ip_address = parts[0]
+        mac_address = parts[4] if len(parts) > 4 else None  # Get the MAC address
+        return ip_address, mac_address
     return None, None
 
 def get_mac_vendor(mac_address):
     # Example logic to get the MAC vendor, which can help identify the device
     # This function can call an API or look up a database
     # For this example, we will return a dummy value
-    return "DummyVendor"  # Replace with actual vendor lookup
+    return "DummyVendor"  # Replace with actual vendor lookup logic
 
 def collect_additional_info(ip_address):
     # Here you can include logic to collect more information if available
@@ -53,14 +55,15 @@ def create_device_file(device_name, device_info):
     
     with open(file_path, 'w') as file:
         file.write(f"Device Name: {device_name}\n")
-        file.write(f"IP Address: {device_info}\n")
-        file.write(f"MAC Address: {get_mac_vendor(device_info)}\n")  # Dummy example, needs real MAC address
+        file.write(f"IP Address: {device_info[0]}\n")
+        file.write(f"MAC Address: {device_info[1]}\n")
+        file.write(f"Vendor: {get_mac_vendor(device_info[1])}\n")
         file.write(f"Email: {email}\n")
         file.write(f"First Name: {first_name}\n")
         file.write(f"Last Name: {last_name}\n")
         file.write(f"Phone Number: {phone_number}\n")
     
-    print(f"Created file for {device_name} with IP {device_info}")
+    print(f"Created file for {device_name} with IP {device_info[0]}")
 
 def monitor_new_devices():
     seen_devices = set()  # Set to keep track of seen devices
@@ -72,11 +75,12 @@ def monitor_new_devices():
         current_devices = set()  # Track devices in this iteration
         
         for device in devices:
-            device_name, ip_address = extract_device_info(device)
-            if device_name and ip_address:
+            ip_address, mac_address = extract_device_info(device)
+            if ip_address and mac_address:
+                device_name = f"Device_{mac_address}"  # Placeholder for device name, use MAC or other identifier
                 current_devices.add(device_name)  # Add to current devices
                 if device_name not in seen_devices:
-                    create_device_file(device_name, ip_address)
+                    create_device_file(device_name, (ip_address, mac_address))
                     seen_devices.add(device_name)  # Mark as seen for future iterations
         
         # Remove devices not seen this iteration from the seen_devices set
