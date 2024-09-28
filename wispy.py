@@ -1,6 +1,5 @@
 import os
 import sys
-import ctypes
 import subprocess
 import time
 
@@ -25,17 +24,15 @@ def print_menu():
 
 def create_and_start_hotspot(ssid, password):
     try:
-        setup_command = f'netsh wlan set hostednetwork mode=allow ssid="{ssid}(mdp: {password})" key="{password}"'
-        start_command = 'netsh wlan start hostednetwork'
-
+        # Create and start the WiFi hotspot using nmcli (NetworkManager Command Line Interface)
+        setup_command = f'nmcli dev wifi hotspot ifname wlan0 ssid "{ssid}" password "{password}"'
         os.system(setup_command)
-        os.system(start_command)
 
         print(f"\nThe WiFi is deployed, its SSID is: {ssid} (mdp: {password})")
         print(f"The password is: {password}")
 
-        # Start viewer.py in the background with a new cmd window
-        subprocess.Popen(['start', 'cmd', '/k', f'python viewer.py'], shell=True)
+        # Start viewer.py in the background with a new terminal window
+        subprocess.Popen(['gnome-terminal', '--', 'python3', 'viewer.py'])
 
         print("\n1: Stop the hotspot")
 
@@ -53,27 +50,23 @@ def create_and_start_hotspot(ssid, password):
 
 def stop_hotspot():
     try:
-        stop_command = 'netsh wlan stop hostednetwork'
+        # Stop the hotspot using nmcli
+        stop_command = 'nmcli connection down Hotspot'
         os.system(stop_command)
-
-        time.sleep(2)
-
-        remove_profile_command = 'netsh wlan delete profile name="NeuilleWifi2"'
-        os.system(remove_profile_command)
-
-        print("Hotspot stopped and removed successfully.")
+        
+        print("Hotspot stopped successfully.")
     except Exception as e:
         print(f"An error occurred: {e}")
 
 def is_admin():
     try:
-        return ctypes.windll.shell32.IsUserAnAdmin()
+        return os.geteuid() == 0  # Checks if the script is running as root (admin)
     except:
         return False
 
 def run_as_admin():
     if not is_admin():
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
+        print("This script needs to be run as root. Please restart it with sudo.")
         sys.exit()
 
 def main():
