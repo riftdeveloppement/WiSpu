@@ -33,12 +33,12 @@ Make sure you have Python installed (version 3.x). You’ll also need admin priv
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/wispy-wifi-manager.git
+   git clone https://github.com/riftdeveloppement/wispyWiSpy.git
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd wispy-wifi-manager
+   cd WiSpy
    ```
 
 3. Install the required dependencies:
