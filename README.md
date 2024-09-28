@@ -33,7 +33,7 @@ Make sure you have Python installed (version 3.x). You’ll also need admin priv
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/riftdeveloppement/wispyWiSpy.git
+   git clone https://github.com/riftdeveloppement/WiSpy.git
    ```
 
 2. Navigate to the project directory:
@@ -53,7 +53,7 @@ To launch the **Wispy Wi-Fi Hotspot Manager**, follow these steps:
 1. Open a terminal with admin privileges (required to manage networks).
 2. Run the main script:
    ```bash
-   python main.py
+   python wispy.py
    ```
 
 ### Scripts 📜
@@ -63,7 +63,7 @@ To launch the **Wispy Wi-Fi Hotspot Manager**, follow these steps:
 To deploy the Wi-Fi hotspot with the default SSID (`WISPY`) and password (`wispy12345`):
 
 ```bash
-python main.py
+python wispy.py
 ```
 
 This will:
