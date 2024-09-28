@@ -1,6 +1,3 @@
-Here’s a sample `README.md` with nice formatting, including several scripts, explanations, and emojis to make it engaging. This example assumes your project is about deploying a Wi-Fi hotspot and monitoring devices connected to it.
-
-```markdown
 # 🌐 Wispy Wi-Fi Hotspot Manager 🚀
 
 Welcome to **Wispy**, your go-to solution for creating and managing Wi-Fi hotspots, monitoring connected devices in real-time, and logging device information automatically.
@@ -128,8 +125,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Happy Wi-Fi Managing!** 🛠️🔥
-```
-
----
-
-This README includes clear sections with instructions, emojis to make it more engaging, and highlights key features. It also provides examples of how to use the scripts and what kind of output to expect. You can customize it further to match the specific details of your project!
